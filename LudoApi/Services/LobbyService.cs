@@ -25,7 +25,7 @@ namespace LudoApi.Services
 
         public ILobby CreateLobby(string connectionId, string lobbyName)
         {
-            var lobby = new Lobby(lobbyName, new GameService(), new Player(connectionId, Color.Red, true));
+            var lobby = new Lobby(lobbyName, new GameService());
             Lobbies.Add(lobby);
             return lobby;
         }

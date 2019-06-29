@@ -10,7 +10,9 @@ namespace LudoApi.Models
 
         int PreviousDieRoll { get; set; }
 
-        bool IsAdmin { get; }
+        bool IsAdmin { get; set; }
+        
+        bool IsReady { get; set; }
 
         IEnumerable<int> Pieces { get; set; }
     }

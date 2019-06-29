@@ -4,12 +4,13 @@ namespace LudoApi.Models
 {
     public class Player : IPlayer
     {
-        public Player(string connectionId, Color color, bool isAdmin = false)
+        public Player(string connectionId, Color color)
         {
             ConnectionId = connectionId;
             Color = color;
-            IsAdmin = isAdmin;
         }
+        
+        public bool IsReady { get; set; }
 
         public string ConnectionId { get; }
 
@@ -19,6 +20,6 @@ namespace LudoApi.Models
 
         public IEnumerable<int> Pieces { get; set; } = new[] {-1, -1, -1, -1};
 
-        public bool IsAdmin { get; }
+        public bool IsAdmin { get; set; }
     }
 }

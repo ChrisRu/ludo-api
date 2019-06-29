@@ -14,7 +14,7 @@ namespace LudoApiTest
         {
             var players = new List<IPlayer>
             {
-                new Player("1", Color.Red, true),
+                new Player("1", Color.Red),
                 new Player("2", Color.Blue),
                 new Player("3", Color.Yellow),
                 new Player("4", Color.Green)
@@ -40,7 +40,7 @@ namespace LudoApiTest
         {
             var players = new List<IPlayer>
             {
-                new Player("1", Color.Red, true),
+                new Player("1", Color.Red),
                 new Player("2", Color.Blue),
                 new Player("3", Color.Yellow),
                 new Player("4", Color.Green)
@@ -67,7 +67,7 @@ namespace LudoApiTest
         {
             var players = new List<IPlayer>
             {
-                new Player("1", Color.Red, true),
+                new Player("1", Color.Red),
                 new Player("2", Color.Blue),
                 new Player("3", Color.Yellow),
                 new Player("4", Color.Green)
@@ -85,7 +85,7 @@ namespace LudoApiTest
         {
             var players = new List<IPlayer>
             {
-                new Player("1", Color.Red, true),
+                new Player("1", Color.Red),
                 new Player("2", Color.Blue),
                 new Player("3", Color.Yellow),
                 new Player("4", Color.Green)
@@ -101,7 +101,7 @@ namespace LudoApiTest
         {
             var players = new List<IPlayer>
             {
-                new Player("1", Color.Red, true),
+                new Player("1", Color.Red),
                 new Player("2", Color.Blue),
                 new Player("3", Color.Yellow),
                 new Player("4", Color.Green)
@@ -117,7 +117,7 @@ namespace LudoApiTest
         [Fact]
         public void TestHasWon()
         {
-            var player = new Player("1", Color.Red, true)
+            var player = new Player("1", Color.Red)
             {
                 Pieces = new[] {40, 41, 42, 43, 44}
             };
@@ -130,7 +130,7 @@ namespace LudoApiTest
         [Fact]
         public void TestHasWonBlue()
         {
-            var player = new Player("1", Color.Blue, true)
+            var player = new Player("1", Color.Blue)
             {
                 Pieces = new[] {10, 11, 12, 13}
             };
@@ -145,7 +145,7 @@ namespace LudoApiTest
         {
             var players = new List<IPlayer>
             {
-                new Player("1", Color.Red, true),
+                new Player("1", Color.Red),
                 new Player("2", Color.Blue),
                 new Player("3", Color.Yellow),
                 new Player("4", Color.Green)
@@ -219,7 +219,7 @@ namespace LudoApiTest
         {
             var players = new List<IPlayer>
             {
-                new Player("1", Color.Red, true),
+                new Player("1", Color.Red),
                 new Player("2", Color.Blue),
                 new Player("3", Color.Yellow),
                 new Player("4", Color.Green)
@@ -236,7 +236,7 @@ namespace LudoApiTest
         {
             var players = new List<IPlayer>
             {
-                new Player("1", Color.Red, true),
+                new Player("1", Color.Red),
                 new Player("2", Color.Blue),
                 new Player("3", Color.Yellow),
                 new Player("4", Color.Green)

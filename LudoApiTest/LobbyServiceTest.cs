@@ -1,4 +1,6 @@
 using System.Linq;
+using System.Numerics;
+using LudoApi.Models;
 using LudoApi.Services;
 using Xunit;
 
@@ -13,18 +15,19 @@ namespace LudoApiTest
             var lobby = lobbyService.CreateLobby("1", "apples");
 
             Assert.Equal("lobby-apples", lobby.Name.ToString());
-            Assert.Single(lobby.Players);
+            Assert.Empty(lobby.Players);
         }
 
         [Fact]
         public void TestGetJoinedLobby()
         {
             var lobbyService = new LobbyService();
-            lobbyService.CreateLobby("1", "apples");
+            var lobby = lobbyService.CreateLobby("1", "apples");
+            lobby.AddPlayer("name", Color.Blue);
 
-            var lobby = lobbyService.GetJoinedLobby("1");
+            var joinedLobby = lobbyService.GetJoinedLobby("name");
 
-            Assert.NotNull(lobby);
+            Assert.NotNull(joinedLobby);
         }
 
         [Fact]

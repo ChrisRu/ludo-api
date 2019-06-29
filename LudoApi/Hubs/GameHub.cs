@@ -39,8 +39,26 @@ namespace LudoApi.Hubs
                 throw new HubException("Lobby with that name already exists");
             }
 
-            _lobbyService.CreateLobby(Context.ConnectionId, lobbyName);
+            var lobby = _lobbyService.CreateLobby(Context.ConnectionId, lobbyName);
             await JoinLobby(lobbyName);
+
+            var player = lobby.Game.GetPlayer(Context.ConnectionId);
+            player.IsAdmin = true;
+        }
+        
+        [HubMethodName("lobby:ready")]
+        public async Task ReadyPlayer(bool ready)
+        {
+            var lobby = _lobbyService.GetJoinedLobby(Context.ConnectionId);
+            if (lobby == null)
+            {
+                throw new HubException("You are not in a lobby");
+            }
+
+            var player = lobby.Game.GetPlayer(Context.ConnectionId);
+            player.IsReady = ready;
+
+            await Clients.Group(lobby.Name.ToString()).SendAsync("lobby:player-ready", Context.ConnectionId);
         }
 
         [HubMethodName("lobby:join")]
@@ -119,6 +137,11 @@ namespace LudoApi.Hubs
             if (player == null || !player.IsAdmin)
             {
                 throw new HubException("Only an admin can start the game");
+            }
+
+            if (lobby.Players.Any(p => !p.IsReady))
+            {
+                throw new HubException("Not every player is ready");
             }
             
             lobby.Game.StartGame(lobby.Players);
