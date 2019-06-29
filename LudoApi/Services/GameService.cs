@@ -33,10 +33,16 @@ namespace LudoApi.Services
                 {
                     if (index == pieceIndex)
                     {
-                        if (pieceLocation == -1) pieceLocation = ColorPositions.StartPosition(player.Color);
+                        if (pieceLocation == -1)
+                        {
+                            pieceLocation = ColorPositions.StartPosition(player.Color);
+                        }
 
                         var nextLocation = pieceLocation + player.PreviousDiceRoll;
-                        if (!ColorPositions.OutsideWinningPosition(player.Color, nextLocation)) return nextLocation;
+                        if (!ColorPositions.OutsideWinningPosition(player.Color, nextLocation))
+                        {
+                            return nextLocation;
+                        }
                     }
 
                     return pieceLocation;
