@@ -23,7 +23,7 @@ Connect on subpath `/game`
 - invoke `lobby:create` with `lobbyName` to create a new lobby
 - invoke `lobby:join` with `lobbyName` to join a created lobby
 - invoke `lobby:leave` to leave your currently joined lobby
-- invoke `lobby:get-players` with `lobbyName` to get a event back called `lobby-players` with the players in said lobby
+- invoke `lobby:get-players` with `lobbyName` to get a event back called `lobby:players` with the players in said lobby
 
 When you're in a lobby you can get events for said lobby
 
