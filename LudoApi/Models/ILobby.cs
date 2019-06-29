@@ -5,7 +5,7 @@ namespace LudoApi.Models
 {
     public interface ILobby
     {
-        string Name { get; }
+        LobbyName Name { get; }
 
         IGameService Game { get; }
 

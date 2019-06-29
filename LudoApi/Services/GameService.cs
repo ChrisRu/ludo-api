@@ -21,9 +21,9 @@ namespace LudoApi.Services
             _playerTurnAction = Turn.Roll;
         }
 
-        public int RollDice(IPlayer player)
+        public int RollDie(IPlayer player)
         {
-            return player.PreviousDiceRoll = Random.Next(1, 6);
+            return player.PreviousDieRoll = Random.Next(1, 6);
         }
 
         public void Advance(IPlayer player, int pieceIndex)
@@ -38,7 +38,7 @@ namespace LudoApi.Services
                             pieceLocation = ColorPositions.StartPosition(player.Color);
                         }
 
-                        var nextLocation = pieceLocation + player.PreviousDiceRoll;
+                        var nextLocation = pieceLocation + player.PreviousDieRoll;
                         if (!ColorPositions.OutsideWinningPosition(player.Color, nextLocation))
                         {
                             return nextLocation;

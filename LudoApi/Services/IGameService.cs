@@ -7,7 +7,7 @@ namespace LudoApi.Services
     {
         void StartGame(IEnumerable<IPlayer> players);
 
-        int RollDice(IPlayer player);
+        int RollDie(IPlayer player);
 
         IPlayer NextTurn();
 

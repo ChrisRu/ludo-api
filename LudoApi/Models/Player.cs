@@ -15,7 +15,7 @@ namespace LudoApi.Models
 
         public Color Color { get; }
 
-        public int PreviousDiceRoll { get; set; } = -1;
+        public int PreviousDieRoll { get; set; } = -1;
 
         public IEnumerable<int> Pieces { get; set; } = new[] {-1, -1, -1, -1};
 

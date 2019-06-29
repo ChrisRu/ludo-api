@@ -8,12 +8,12 @@ namespace LudoApi.Models
     {
         public Lobby(string name, IGameService gameService, IPlayer creator)
         {
-            Name = name;
+            Name = new LobbyName(name);
             Game = gameService;
             Players = new List<IPlayer> {creator};
         }
 
-        public string Name { get; }
+        public LobbyName Name { get; }
 
         public IGameService Game { get; }
 

@@ -25,7 +25,7 @@ namespace LudoApiTest
             const int piece = 0;
             const int playerIndex = 0;
 
-            var rolled = gameService.RollDice(players.ElementAt(playerIndex));
+            var rolled = gameService.RollDie(players.ElementAt(playerIndex));
             var position = players.ElementAt(playerIndex).Pieces.ElementAt(piece);
 
             Assert.Equal(-1, position);
@@ -51,7 +51,7 @@ namespace LudoApiTest
             const int piece = 1;
             const int playerIndex = 2;
 
-            var rolled = gameService.RollDice(players.ElementAt(playerIndex));
+            var rolled = gameService.RollDie(players.ElementAt(playerIndex));
             var position = players.ElementAt(playerIndex).Pieces.ElementAt(piece);
 
             Assert.Equal(-1, position);

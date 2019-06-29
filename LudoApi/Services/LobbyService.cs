@@ -6,8 +6,6 @@ namespace LudoApi.Services
 {
     public class LobbyService : ILobbyService
     {
-        private const string LobbyPrefix = "lobby-";
-
         private List<ILobby> Lobbies { get; } = new List<ILobby>();
 
         public IEnumerable<ILobby> GetLobbies()
@@ -22,18 +20,23 @@ namespace LudoApi.Services
 
         public ILobby? GetLobby(string lobbyName)
         {
-            lobbyName = LobbyPrefix + lobbyName.Replace(LobbyPrefix, string.Empty);
-
-            return Lobbies.FirstOrDefault(lobby => lobby.Name == lobbyName);
+            return Lobbies.FirstOrDefault(lobby => lobby.Name.Equals(lobbyName));
         }
 
         public ILobby CreateLobby(string connectionId, string lobbyName)
         {
-            lobbyName = LobbyPrefix + lobbyName.Replace(LobbyPrefix, string.Empty);
-
             var lobby = new Lobby(lobbyName, new GameService(), new Player(connectionId, Color.Red, true));
             Lobbies.Add(lobby);
             return lobby;
+        }
+
+        public void DestroyLobby(string lobbyName)
+        {
+            var lobby = GetLobby(lobbyName);
+            if (lobby != null)
+            {
+                Lobbies.Remove(lobby);
+            }
         }
     }
 }

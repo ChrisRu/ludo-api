@@ -8,7 +8,7 @@ namespace LudoApi.Models
 
         Color Color { get; }
 
-        int PreviousDiceRoll { get; set; }
+        int PreviousDieRoll { get; set; }
 
         bool IsAdmin { get; }
 

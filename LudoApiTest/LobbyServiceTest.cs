@@ -12,7 +12,7 @@ namespace LudoApiTest
             var lobbyService = new LobbyService();
             var lobby = lobbyService.CreateLobby("1", "apples");
 
-            Assert.Equal("lobby-apples", lobby.Name);
+            Assert.Equal("lobby-apples", lobby.Name.ToString());
             Assert.Single(lobby.Players);
         }
 

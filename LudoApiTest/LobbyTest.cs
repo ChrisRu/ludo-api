@@ -12,7 +12,7 @@ namespace LudoApiTest
             var lobby = new Lobby("1", null, new Player("connection-id-1", Color.Red));
 
             Assert.NotNull(lobby);
-            Assert.Equal("1", lobby.Name);
+            Assert.Equal("lobby-1", lobby.Name.ToString());
             Assert.Single(lobby.Players);
             Assert.Null(lobby.Game);
         }
