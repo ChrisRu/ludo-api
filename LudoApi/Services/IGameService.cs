@@ -8,9 +8,9 @@ namespace LudoApi.Services
         void StartGame(IEnumerable<IPlayer> players);
 
         int RollDice(IPlayer player);
-        
+
         IPlayer NextTurn();
-        
+
         IPlayer GetPlayer(string connectionId);
 
         Turn GetTurn(IPlayer player);

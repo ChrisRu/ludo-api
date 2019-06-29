@@ -20,18 +20,12 @@ namespace LudoApi.Hubs
         public async Task RollDice()
         {
             var lobby = _lobbyService.GetJoinedLobby(Context.ConnectionId);
-            if (lobby == null)
-            {
-                throw new HubException("You're not in a lobby");
-            }
+            if (lobby == null) throw new HubException("You're not in a lobby");
 
             var game = lobby.Game;
             var player = game.GetPlayer(Context.ConnectionId);
-            if (game.GetTurn(player) != Turn.Roll)
-            {
-                throw new HubException("Not your turn");
-            }
-            
+            if (game.GetTurn(player) != Turn.Roll) throw new HubException("Not your turn");
+
             var diceRoll = game.RollDice(player);
             await Clients.Group(lobby.Name).SendAsync("dice-roll", player.ConnectionId, diceRoll);
             await NextTurn(game, lobby.Name);
@@ -40,17 +34,11 @@ namespace LudoApi.Hubs
         public async Task Advance(int piece)
         {
             var lobby = _lobbyService.GetJoinedLobby(Context.ConnectionId);
-            if (lobby == null)
-            {
-                throw new HubException("You're not in a lobby");
-            }
+            if (lobby == null) throw new HubException("You're not in a lobby");
 
             var game = lobby.Game;
             var player = game.GetPlayer(Context.ConnectionId);
-            if (game.GetTurn(player) != Turn.Advance)
-            {
-                throw new HubException("Not your turn to advance your piece");
-            }
+            if (game.GetTurn(player) != Turn.Advance) throw new HubException("Not your turn to advance your piece");
 
             game.Advance(player, piece);
             await Clients.Group(lobby.Name).SendAsync("advance", player.ConnectionId, piece);
@@ -67,10 +55,7 @@ namespace LudoApi.Hubs
         public async Task GameStart()
         {
             var lobby = _lobbyService.GetJoinedLobby(Context.ConnectionId);
-            if (lobby == null)
-            {
-                throw new HubException("You're not in a lobby");
-            }
+            if (lobby == null) throw new HubException("You're not in a lobby");
 
             var game = lobby.Game;
             game.StartGame(lobby.Players);
@@ -82,7 +67,7 @@ namespace LudoApi.Hubs
             return _lobbyService.GetLobbies();
         }
 
-        public ILobby GetJoinedLobby()
+        public ILobby? GetJoinedLobby()
         {
             return _lobbyService.GetJoinedLobby(Context.ConnectionId);
         }
@@ -90,43 +75,32 @@ namespace LudoApi.Hubs
         public async Task CreateLobby(string lobbyName)
         {
             if (_lobbyService.GetLobby(lobbyName) != null)
-            {
                 throw new HubException("Lobby with that name already exists");
-            }
-            
+
             var lobby = _lobbyService.CreateLobby(Context.ConnectionId, lobbyName);
             await Groups.AddToGroupAsync(Context.ConnectionId, lobby.Name, Context.ConnectionAborted);
         }
-        
+
 
         public async Task JoinLobby(string lobbyName)
         {
             var foundLobby = _lobbyService.GetLobby(lobbyName);
-            if (foundLobby == null)
-            {
-                throw new HubException("Lobby does not exist");
-            }
+            if (foundLobby == null) throw new HubException("Lobby does not exist");
 
             var playerCount = foundLobby.Players.Count();
-            if (playerCount >= 4)
-            {
-                throw new HubException("Lobby is full");
-            }
-            
-            foundLobby.AddPlayer(Context.ConnectionId, (Color)(playerCount + 1));
-            
+            if (playerCount >= 4) throw new HubException("Lobby is full");
+
+            foundLobby.AddPlayer(Context.ConnectionId, (Color) (playerCount + 1));
+
             await Groups.AddToGroupAsync(Context.ConnectionId, foundLobby.Name, Context.ConnectionAborted);
         }
 
         public async Task LeaveLobby(string lobbyName)
         {
             var foundLobby = _lobbyService.GetLobby(lobbyName);
-            if (foundLobby == null)
-            {
-                throw new HubException("Lobby does not exist");
-            }
+            if (foundLobby == null) throw new HubException("Lobby does not exist");
             foundLobby.RemovePlayer(Context.ConnectionId);
-            
+
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, foundLobby.Name);
         }
 

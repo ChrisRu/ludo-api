@@ -7,7 +7,7 @@ namespace LudoApi.Services
     public class LobbyService : ILobbyService
     {
         private const string LobbyPrefix = "lobby-";
-        
+
         private List<ILobby> Lobbies { get; } = new List<ILobby>();
 
         public IEnumerable<ILobby> GetLobbies()
@@ -23,7 +23,7 @@ namespace LudoApi.Services
         public ILobby? GetLobby(string lobbyName)
         {
             lobbyName = LobbyPrefix + lobbyName.Replace(LobbyPrefix, string.Empty);
-            
+
             return Lobbies.FirstOrDefault(lobby => lobby.Name == lobbyName);
         }
 

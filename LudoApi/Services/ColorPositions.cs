@@ -15,11 +15,8 @@ namespace LudoApi.Services
         {
             var colorCount = Enum.GetValues(typeof(Color)).Length;
 
-            if ((int)color >= colorCount)
-            {
-                throw new IndexOutOfRangeException("Unknown color");
-            }
-            
+            if ((int) color >= colorCount) throw new IndexOutOfRangeException("Unknown color");
+
             return (int) color * (BoardSize / colorCount);
         }
 

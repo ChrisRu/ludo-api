@@ -11,34 +11,33 @@ namespace LudoApiTest
         {
             var lobbyService = new LobbyService();
             var lobby = lobbyService.CreateLobby("1", "apples");
-            
+
             Assert.Equal("lobby-apples", lobby.Name);
             Assert.Single(lobby.Players);
         }
-        
+
         [Fact]
-        public void TestGetLobby()
+        public void TestGetJoinedLobby()
         {
             var lobbyService = new LobbyService();
-            var createdLobby = lobbyService.CreateLobby("1", "apples");
+            lobbyService.CreateLobby("1", "apples");
 
-            var lobby = lobbyService.GetLobby("apples");
+            var lobby = lobbyService.GetJoinedLobby("1");
 
-            Assert.Same(createdLobby, lobby);
+            Assert.NotNull(lobby);
         }
-        
+
         [Fact]
-        public void TestGetLobbyNonExisting()
+        public void TestGetJoinedLobbyNotJoined()
         {
             var lobbyService = new LobbyService();
-            var createdLobby = lobbyService.CreateLobby("1", "apples");
+            lobbyService.CreateLobby("1", "apples");
 
-            var lobby = lobbyService.GetLobby("pears");
+            var lobby = lobbyService.GetJoinedLobby("2");
 
-            Assert.NotSame(createdLobby, lobby);
             Assert.Null(lobby);
         }
-        
+
         [Fact]
         public void TestGetLobbies()
         {
@@ -50,7 +49,7 @@ namespace LudoApiTest
 
             Assert.Equal(2, lobbies.Count());
         }
-        
+
         [Fact]
         public void TestGetLobbiesNon()
         {
@@ -60,26 +59,27 @@ namespace LudoApiTest
 
             Assert.Empty(lobbies);
         }
-        
+
         [Fact]
-        public void TestGetJoinedLobby()
+        public void TestGetLobby()
         {
             var lobbyService = new LobbyService();
-            lobbyService.CreateLobby("1", "apples");
+            var createdLobby = lobbyService.CreateLobby("1", "apples");
 
-            var lobby = lobbyService.GetJoinedLobby("1");
+            var lobby = lobbyService.GetLobby("apples");
 
-            Assert.NotNull(lobby);
+            Assert.Same(createdLobby, lobby);
         }
-        
+
         [Fact]
-        public void TestGetJoinedLobbyNotJoined()
+        public void TestGetLobbyNonExisting()
         {
             var lobbyService = new LobbyService();
-            lobbyService.CreateLobby("1", "apples");
+            var createdLobby = lobbyService.CreateLobby("1", "apples");
 
-            var lobby = lobbyService.GetJoinedLobby("2");
+            var lobby = lobbyService.GetLobby("pears");
 
+            Assert.NotSame(createdLobby, lobby);
             Assert.Null(lobby);
         }
     }

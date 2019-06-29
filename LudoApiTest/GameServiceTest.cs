@@ -10,7 +10,7 @@ namespace LudoApiTest
     public class GameServiceTest
     {
         [Fact]
-        public void TestNotStartedGameTurn()
+        public void TestAdvancePlayer()
         {
             var players = new List<IPlayer>
             {
@@ -20,10 +20,46 @@ namespace LudoApiTest
                 new Player("4", Color.Green)
             };
             var gameService = new GameService();
+            gameService.StartGame(players);
 
-            var turn = gameService.GetTurn(players.ElementAt(0));
+            const int piece = 0;
+            const int playerIndex = 0;
 
-            Assert.Equal(Turn.None, turn);
+            var rolled = gameService.RollDice(players.ElementAt(playerIndex));
+            var position = players.ElementAt(playerIndex).Pieces.ElementAt(piece);
+
+            Assert.Equal(-1, position);
+
+            gameService.Advance(players.ElementAt(playerIndex), piece);
+
+            Assert.Equal(rolled, players.ElementAt(playerIndex).Pieces.ElementAt(piece));
+        }
+
+        [Fact]
+        public void TestAdvancePlayerSecond()
+        {
+            var players = new List<IPlayer>
+            {
+                new Player("1", Color.Red, true),
+                new Player("2", Color.Blue),
+                new Player("3", Color.Yellow),
+                new Player("4", Color.Green)
+            };
+            var gameService = new GameService();
+            gameService.StartGame(players);
+
+            const int piece = 1;
+            const int playerIndex = 2;
+
+            var rolled = gameService.RollDice(players.ElementAt(playerIndex));
+            var position = players.ElementAt(playerIndex).Pieces.ElementAt(piece);
+
+            Assert.Equal(-1, position);
+
+            gameService.Advance(players.ElementAt(playerIndex), piece);
+
+            Assert.Equal(rolled + ColorPositions.StartPosition(players.ElementAt(playerIndex).Color),
+                players.ElementAt(playerIndex).Pieces.ElementAt(piece));
         }
 
         [Fact]
@@ -61,7 +97,7 @@ namespace LudoApiTest
         }
 
         [Fact]
-        public void TestStartGameTurn()
+        public void TestHasNotWon()
         {
             var players = new List<IPlayer>
             {
@@ -73,9 +109,35 @@ namespace LudoApiTest
             var gameService = new GameService();
             gameService.StartGame(players);
 
-            var turn = gameService.GetTurn(players.ElementAt(0));
+            var won = gameService.HasWon(players.ElementAt(0));
 
-            Assert.Equal(Turn.Roll, turn);
+            Assert.False(won);
+        }
+
+        [Fact]
+        public void TestHasWon()
+        {
+            var player = new Player("1", Color.Red, true)
+            {
+                Pieces = new[] {40, 41, 42, 43, 44}
+            };
+
+            var won = new GameService().HasWon(player);
+
+            Assert.True(won);
+        }
+
+        [Fact]
+        public void TestHasWonBlue()
+        {
+            var player = new Player("1", Color.Blue, true)
+            {
+                Pieces = new[] {10, 11, 12, 13}
+            };
+
+            var won = new GameService().HasWon(player);
+
+            Assert.True(won);
         }
 
         [Fact]
@@ -153,7 +215,24 @@ namespace LudoApiTest
         }
 
         [Fact]
-        public void TestAdvancePlayer()
+        public void TestNotStartedGameTurn()
+        {
+            var players = new List<IPlayer>
+            {
+                new Player("1", Color.Red, true),
+                new Player("2", Color.Blue),
+                new Player("3", Color.Yellow),
+                new Player("4", Color.Green)
+            };
+            var gameService = new GameService();
+
+            var turn = gameService.GetTurn(players.ElementAt(0));
+
+            Assert.Equal(Turn.None, turn);
+        }
+
+        [Fact]
+        public void TestStartGameTurn()
         {
             var players = new List<IPlayer>
             {
@@ -165,88 +244,9 @@ namespace LudoApiTest
             var gameService = new GameService();
             gameService.StartGame(players);
 
-            const int piece = 0;
-            const int playerIndex = 0;
+            var turn = gameService.GetTurn(players.ElementAt(0));
 
-            var rolled = gameService.RollDice(players.ElementAt(playerIndex));
-            var position = players.ElementAt(playerIndex).Pieces.ElementAt(piece);
-
-            Assert.Equal(-1, position);
-
-            gameService.Advance(players.ElementAt(playerIndex), piece);
-
-            Assert.Equal(rolled, players.ElementAt(playerIndex).Pieces.ElementAt(piece));
-        }
-
-        [Fact]
-        public void TestAdvancePlayerSecond()
-        {
-            var players = new List<IPlayer>
-            {
-                new Player("1", Color.Red, true),
-                new Player("2", Color.Blue),
-                new Player("3", Color.Yellow),
-                new Player("4", Color.Green)
-            };
-            var gameService = new GameService();
-            gameService.StartGame(players);
-
-            const int piece = 1;
-            const int playerIndex = 2;
-
-            var rolled = gameService.RollDice(players.ElementAt(playerIndex));
-            var position = players.ElementAt(playerIndex).Pieces.ElementAt(piece);
-
-            Assert.Equal(-1, position);
-
-            gameService.Advance(players.ElementAt(playerIndex), piece);
-
-            Assert.Equal(rolled + ColorPositions.StartPosition(players.ElementAt(playerIndex).Color),
-                players.ElementAt(playerIndex).Pieces.ElementAt(piece));
-        }
-
-        [Fact]
-        public void TestHasNotWon()
-        {
-            var players = new List<IPlayer>
-            {
-                new Player("1", Color.Red, true),
-                new Player("2", Color.Blue),
-                new Player("3", Color.Yellow),
-                new Player("4", Color.Green)
-            };
-            var gameService = new GameService();
-            gameService.StartGame(players);
-
-            var won = gameService.HasWon(players.ElementAt(0));
-
-            Assert.False(won);
-        }
-
-        [Fact]
-        public void TestHasWon()
-        {
-            var player = new Player("1", Color.Red, true)
-            {
-                Pieces = new[] {40, 41, 42, 43, 44}
-            };
-
-            var won = new GameService().HasWon(player);
-
-            Assert.True(won);
-        }
-
-        [Fact]
-        public void TestHasWonBlue()
-        {
-            var player = new Player("1", Color.Blue, true)
-            {
-                Pieces = new[] {10, 11, 12, 13}
-            };
-            
-            var won = new GameService().HasWon(player);
-
-            Assert.True(won);
+            Assert.Equal(Turn.Roll, turn);
         }
     }
 }

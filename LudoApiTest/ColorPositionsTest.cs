@@ -8,16 +8,6 @@ namespace LudoApiTest
     public class ColorPositionsTest
     {
         [Fact]
-        public void GetStartPositionRed()
-        {
-            const Color color = Color.Red;
-
-            var startPosition = ColorPositions.StartPosition(color);
-
-            Assert.Equal(0, startPosition);
-        }
-
-        [Fact]
         public void GetStartPositionBlue()
         {
             const Color color = Color.Blue;
@@ -25,16 +15,6 @@ namespace LudoApiTest
             var startPosition = ColorPositions.StartPosition(color);
 
             Assert.Equal(10, startPosition);
-        }
-
-        [Fact]
-        public void GetStartPositionYellow()
-        {
-            const Color color = Color.Yellow;
-
-            var startPosition = ColorPositions.StartPosition(color);
-
-            Assert.Equal(20, startPosition);
         }
 
         [Fact]
@@ -48,6 +28,16 @@ namespace LudoApiTest
         }
 
         [Fact]
+        public void GetStartPositionRed()
+        {
+            const Color color = Color.Red;
+
+            var startPosition = ColorPositions.StartPosition(color);
+
+            Assert.Equal(0, startPosition);
+        }
+
+        [Fact]
         public void GetStartPositionUnknown()
         {
             const Color color = (Color) 5;
@@ -56,12 +46,22 @@ namespace LudoApiTest
         }
 
         [Fact]
+        public void GetStartPositionYellow()
+        {
+            const Color color = Color.Yellow;
+
+            var startPosition = ColorPositions.StartPosition(color);
+
+            Assert.Equal(20, startPosition);
+        }
+
+        [Fact]
         public void GetWinningPositions()
         {
             const Color color = Color.Blue;
 
             var winPositions = ColorPositions.WinPositions(color);
-            
+
             Assert.Empty(winPositions);
         }
     }

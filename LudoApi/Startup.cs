@@ -19,7 +19,7 @@ namespace LudoApi
             services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            
+
             services.AddSignalR();
         }
 
@@ -29,17 +29,16 @@ namespace LudoApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            if (environment.IsProduction() || environment.IsStaging())
+            else
             {
+                app.UseExceptionHandler("/error");
                 app.UseHsts();
-                app.UseHttpsRedirection();
             }
 
+            app.UseRouting();
             app.UseCors(corsPolicyBuilder =>
             {
                 corsPolicyBuilder
-                    .WithOrigins("*")
                     .AllowAnyHeader()
                     .WithMethods("GET", "POST")
                     .AllowCredentials();
@@ -47,7 +46,8 @@ namespace LudoApi
 
             app.UseEndpoints(endpointRouteBuilder =>
             {
-                endpointRouteBuilder.MapHub<GameHub>("/");
+                endpointRouteBuilder.MapControllerRoute("default", "{controller=Error}/{action=Index}/{id?}");
+                endpointRouteBuilder.MapHub<GameHub>("/game");
             });
         }
     }
