@@ -16,6 +16,18 @@ namespace LudoApi
                 .AddTransient<IGameService, GameService>()
                 .AddSingleton<ILobbyService, LobbyService>();
 
+            services.AddCors(
+                o => o.AddPolicy(
+                    "DefaultPolicy",
+                    builder =>
+                    {
+                        builder.AllowAnyMethod()
+                               .AllowAnyHeader()
+                               .WithOrigins("http://localhost:8080", "https://localhost:8080")
+                               .AllowCredentials();
+                    })
+                );
+
             services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
@@ -36,13 +48,7 @@ namespace LudoApi
             }
 
             app.UseRouting();
-            app.UseCors(corsPolicyBuilder =>
-            {
-                corsPolicyBuilder
-                    .AllowAnyHeader()
-                    .WithMethods("GET", "POST")
-                    .AllowCredentials();
-            });
+            app.UseCors("DefaultPolicy");
 
             app.UseEndpoints(endpointRouteBuilder =>
             {

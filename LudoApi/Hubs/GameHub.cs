@@ -19,12 +19,12 @@ namespace LudoApi.Hubs
         public override async Task OnDisconnectedAsync(Exception exception)
         {
             await LeaveLobby();
-            
+
             await base.OnDisconnectedAsync(exception);
         }
-        
+
         #region lobby
-        
+
         [HubMethodName("lobby:create")]
         public async Task CreateLobby(string lobbyName)
         {
@@ -33,19 +33,19 @@ namespace LudoApi.Hubs
             {
                 throw new HubException("You can't create a lobby while you're in a lobby");
             }
-            
+
             if (_lobbyService.GetLobby(lobbyName) != null)
             {
-                throw new HubException("Lobby with that name already exists");
+                throw new HubException($"Lobby with the name '${lobbyName}' already exists");
             }
 
-            var lobby = _lobbyService.CreateLobby(Context.ConnectionId, lobbyName);
+            var lobby = _lobbyService.CreateLobby(lobbyName);
             await JoinLobby(lobbyName);
 
             var player = lobby.Game.GetPlayer(Context.ConnectionId);
             player.IsAdmin = true;
         }
-        
+
         [HubMethodName("lobby:ready")]
         public async Task ReadyPlayer(bool ready)
         {
@@ -58,7 +58,7 @@ namespace LudoApi.Hubs
             var player = lobby.Game.GetPlayer(Context.ConnectionId);
             player.IsReady = ready;
 
-            await Clients.Group(lobby.Name.ToString()).SendAsync("lobby:player-ready", Context.ConnectionId);
+            await Clients.Group($"lobby-{lobby.Id}").SendAsync("lobby:player-ready", Context.ConnectionId);
         }
 
         [HubMethodName("lobby:join")]
@@ -67,13 +67,13 @@ namespace LudoApi.Hubs
             var joinedLobby = _lobbyService.GetJoinedLobby(Context.ConnectionId);
             if (joinedLobby != null)
             {
-                throw new HubException("You can't join a lobby while you're in a different lobby");
+                throw new HubException($"You can't join a lobby while you're in a different lobby '{joinedLobby.Name}'");
             }
-            
+
             var lobby = _lobbyService.GetLobby(lobbyName);
             if (lobby == null)
             {
-                throw new HubException("Lobby does not exist");
+                throw new HubException($"Lobby '${lobbyName}' does not exist");
             }
 
             var playerCount = lobby.Players.Count();
@@ -82,10 +82,10 @@ namespace LudoApi.Hubs
                 throw new HubException("Lobby is full");
             }
 
-            lobby.AddPlayer(Context.ConnectionId, (Color) (playerCount + 1));
+            lobby.AddPlayer(Context.ConnectionId, (Color)(playerCount + 1));
 
-            await Groups.AddToGroupAsync(Context.ConnectionId, lobby.Name.ToString(), Context.ConnectionAborted);
-            await Clients.Group(lobby.Name.ToString()).SendAsync("lobby:player-join", Context.ConnectionId);
+            await Groups.AddToGroupAsync(Context.ConnectionId, $"lobby-{lobby.Id}", Context.ConnectionAborted);
+            await Clients.Group($"lobby-{lobby.Id}").SendAsync("lobby:player-join", Context.ConnectionId);
         }
 
         [HubMethodName("lobby:leave")]
@@ -99,31 +99,41 @@ namespace LudoApi.Hubs
 
             lobby.RemovePlayer(Context.ConnectionId);
 
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, lobby.Name.ToString());
-            await Clients.Group(lobby.Name.ToString()).SendAsync("lobby:player-leave", Context.ConnectionId);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"lobby-{lobby.Id}");
+            await Clients.Group($"lobby-{lobby.Id}").SendAsync("lobby:player-leave", Context.ConnectionId);
 
             if (!lobby.Players.Any())
             {
-                _lobbyService.DestroyLobby(lobby.Name.ToString());
+                _lobbyService.DestroyLobby($"lobby-{lobby.Id}");
             }
         }
-        
+
+        [HubMethodName("lobby:get-lobbies")]
+        public async Task GetLobbies()
+        {
+            var lobbies = _lobbyService.GetLobbies().Select(e => e.Name);
+
+            await Clients
+                .User(Context.ConnectionId)
+                .SendAsync("lobby:lobbies", lobbies);
+        }
+
         [HubMethodName("lobby:get-players")]
         public async Task GetPlayers(string lobbyName)
         {
             var lobby = _lobbyService.GetLobby(lobbyName);
             if (lobby == null)
             {
-                throw new HubException("Lobby does not exist");
+                throw new HubException($"Lobby '{lobbyName}' does not exist");
             }
 
             await Clients.User(Context.ConnectionId).SendAsync("lobby:players", lobby.Players);
         }
-        
+
         #endregion
-        
+
         #region game
-        
+
         [HubMethodName("game:start")]
         public async Task GameStart()
         {
@@ -143,10 +153,10 @@ namespace LudoApi.Hubs
             {
                 throw new HubException("Not every player is ready");
             }
-            
+
             lobby.Game.StartGame(lobby.Players);
-            
-            await Clients.Group(lobby.Name.ToString()).SendAsync("game:started");
+
+            await Clients.Group($"lobby-{lobby.Id}").SendAsync("game:started");
         }
 
         [HubMethodName("game:roll-die")]
@@ -165,9 +175,9 @@ namespace LudoApi.Hubs
             }
 
             var dieRoll = lobby.Game.RollDie(player);
-            await Clients.Group(lobby.Name.ToString()).SendAsync("game:die-roll", player.ConnectionId, dieRoll);
+            await Clients.Group($"lobby-{lobby.Id}").SendAsync("game:die-roll", player.ConnectionId, dieRoll);
 
-            await NextTurn(lobby.Game, lobby.Name);
+            await NextTurn(lobby.Game, lobby);
         }
 
         [HubMethodName("game:advance")]
@@ -187,19 +197,19 @@ namespace LudoApi.Hubs
             }
 
             game.Advance(player, piece);
-            await Clients.Group(lobby.Name.ToString()).SendAsync("game:advanced", player.ConnectionId, piece);
-            
-            await NextTurn(game, lobby.Name);
+            await Clients.Group($"lobby-{lobby.Id}").SendAsync("game:advanced", player.ConnectionId, piece);
+
+            await NextTurn(game, lobby);
         }
 
-        private async Task NextTurn(IGameService game, LobbyName lobbyName)
+        private async Task NextTurn(IGameService game, ILobby lobby)
         {
             var player = game.NextTurn();
             var turn = game.GetTurn(player);
 
-            await Clients.Group(lobbyName.ToString()).SendAsync("game:next-turn", player.ConnectionId, turn.ToString());
+            await Clients.Group($"lobby-{lobby.Id}").SendAsync("game:next-turn", player.ConnectionId, turn.ToString());
         }
-        
+
         #endregion
     }
 }

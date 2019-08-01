@@ -55,7 +55,7 @@ namespace LudoApiTest
             Assert.Equal(20, startPosition);
         }
 
-        [Fact]
+        [Fact(Skip = "Not yet implemented")]
         public void GetWinningPositions()
         {
             const Color color = Color.Blue;

@@ -20,12 +20,12 @@ namespace LudoApi.Services
 
         public ILobby? GetLobby(string lobbyName)
         {
-            return Lobbies.FirstOrDefault(lobby => lobby.Name.Equals(lobbyName));
+            return Lobbies.FirstOrDefault(lobby => lobby.Name == lobbyName);
         }
 
-        public ILobby CreateLobby(string connectionId, string lobbyName)
+        public ILobby CreateLobby(string lobbyName)
         {
-            var lobby = new Lobby(lobbyName, new GameService());
+            var lobby = new Lobby(Lobbies.Count, lobbyName, new GameService());
             Lobbies.Add(lobby);
             return lobby;
         }

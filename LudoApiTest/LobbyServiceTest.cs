@@ -12,9 +12,10 @@ namespace LudoApiTest
         public void TestCreateLobby()
         {
             var lobbyService = new LobbyService();
-            var lobby = lobbyService.CreateLobby("1", "apples");
+            var lobby = lobbyService.CreateLobby("apples");
 
-            Assert.Equal("lobby-apples", lobby.Name.ToString());
+            Assert.Equal("apples", lobby.Name);
+            Assert.Equal(0, lobby.Id);
             Assert.Empty(lobby.Players);
         }
 
@@ -22,7 +23,7 @@ namespace LudoApiTest
         public void TestGetJoinedLobby()
         {
             var lobbyService = new LobbyService();
-            var lobby = lobbyService.CreateLobby("1", "apples");
+            var lobby = lobbyService.CreateLobby("apples");
             lobby.AddPlayer("name", Color.Blue);
 
             var joinedLobby = lobbyService.GetJoinedLobby("name");
@@ -34,7 +35,7 @@ namespace LudoApiTest
         public void TestGetJoinedLobbyNotJoined()
         {
             var lobbyService = new LobbyService();
-            lobbyService.CreateLobby("1", "apples");
+            lobbyService.CreateLobby("apples");
 
             var lobby = lobbyService.GetJoinedLobby("2");
 
@@ -45,8 +46,8 @@ namespace LudoApiTest
         public void TestGetLobbies()
         {
             var lobbyService = new LobbyService();
-            lobbyService.CreateLobby("1", "apples");
-            lobbyService.CreateLobby("2", "pears");
+            lobbyService.CreateLobby("apples");
+            lobbyService.CreateLobby("pears");
 
             var lobbies = lobbyService.GetLobbies();
 
@@ -67,7 +68,7 @@ namespace LudoApiTest
         public void TestGetLobby()
         {
             var lobbyService = new LobbyService();
-            var createdLobby = lobbyService.CreateLobby("1", "apples");
+            var createdLobby = lobbyService.CreateLobby("apples");
 
             var lobby = lobbyService.GetLobby("apples");
 
@@ -78,7 +79,7 @@ namespace LudoApiTest
         public void TestGetLobbyNonExisting()
         {
             var lobbyService = new LobbyService();
-            var createdLobby = lobbyService.CreateLobby("1", "apples");
+            var createdLobby = lobbyService.CreateLobby("apples");
 
             var lobby = lobbyService.GetLobby("pears");
 

@@ -3,6 +3,6 @@
         <TargetFramework>netcoreapp3.0</TargetFramework>
         <RootNamespace>LudoApi</RootNamespace>
         <LangVersion>8</LangVersion>
-        <NullableContextOptions>enable</NullableContextOptions>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 </Project>

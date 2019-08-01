@@ -127,7 +127,7 @@ namespace LudoApiTest
             Assert.True(won);
         }
 
-        [Fact]
+        [Fact(Skip = "Not yet implemented")]
         public void TestHasWonBlue()
         {
             var player = new Player("1", Color.Blue)

@@ -6,14 +6,17 @@ namespace LudoApi.Models
 {
     public class Lobby : ILobby
     {
-        public Lobby(string name, IGameService gameService)
+        public Lobby(int id, string name, IGameService gameService)
         {
-            Name = new LobbyName(name);
+            Id = id;
+            Name = name;
             Game = gameService;
             Players = new List<IPlayer>();
         }
 
-        public LobbyName Name { get; }
+        public int Id { get; }
+
+        public string Name { get; }
 
         public IGameService Game { get; }
 
