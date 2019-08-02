@@ -24,15 +24,14 @@ Connect on subpath `/game`
 - invoke `lobby:join` with `lobbyName` to join a created lobby
 - invoke `lobby:leave` to leave your currently joined lobby
 - invoke `lobby:ready` to inform your mates you're ready to roll
-- invoke `lobby:get-players` with `lobbyName` to get an event back called `lobby:players` with the players in said lobby
-- invoke `lobby:get-lobbies` to get an event back called `lobby:lobbies` with the lobbies names
-- invoke `lobby:exists` with `lobbyName` to get an event back called `lobby:status` with a boolean referring to said lobby's existence
+- invoke `lobby:get-players` with `lobbyName` to get the players in said lobby
+- invoke `lobby:get-lobbies` to get the lobbies names
+- invoke `lobby:exists` with `lobbyName` to check whether a lobby with that name already exists
 
 When you're in a lobby you can get events for said lobby
 
 - on `lobby:player-join` it returns the user details of the player that joined
 - on `lobby:player-leave` it returns the user identifier for the player that left
-- on `lobby:players` (has to be invoked via `lobby:get-players`) it returns a list of player's details
 - on `lobby:player-ready` it returns the player identifier of the player who is ready to start the game
 
 #### Game

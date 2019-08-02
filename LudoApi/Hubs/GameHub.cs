@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace LudoApi.Hubs
 {
+    using System.Collections;
+
     public class GameHub : Hub
     {
         private readonly ILobbyService _lobbyService;
@@ -110,23 +112,19 @@ namespace LudoApi.Hubs
         }
 
         [HubMethodName("lobby:get-lobbies")]
-        public async Task GetLobbies()
+        public IEnumerable GetLobbies()
         {
-            var lobbies = _lobbyService.GetLobbies().Select(e => e.Name).ToArray();
-
-            await Clients.Caller.SendAsync("lobby:lobbies", lobbies);
+            return _lobbyService.GetLobbies().Select(e => e.Name);
         }
 
         [HubMethodName("lobby:exists")]
-        public async Task LobbyExists(string lobbyName)
+        public bool LobbyExists(string lobbyName)
         {
-            var lobby = _lobbyService.GetLobby(lobbyName);
-
-            await Clients.Caller.SendAsync("lobby:status", lobby != null);
+            return _lobbyService.GetLobby(lobbyName) != null;
         }
 
         [HubMethodName("lobby:get-players")]
-        public async Task GetPlayers(string lobbyName)
+        public IEnumerable GetPlayers(string lobbyName)
         {
             var lobby = _lobbyService.GetLobby(lobbyName);
             if (lobby == null)
@@ -134,9 +132,7 @@ namespace LudoApi.Hubs
                 throw new HubException($"Lobby '{lobbyName}' does not exist");
             }
 
-            var players = lobby.Players.ToArray();
-
-            await Clients.Caller.SendAsync("lobby:players", players);
+            return lobby.Players;
         }
 
         #endregion
