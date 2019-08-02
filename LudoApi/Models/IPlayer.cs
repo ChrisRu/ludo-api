@@ -9,8 +9,6 @@ namespace LudoApi.Models
         Color Color { get; }
 
         int PreviousDieRoll { get; set; }
-
-        bool IsAdmin { get; set; }
         
         bool IsReady { get; set; }
 

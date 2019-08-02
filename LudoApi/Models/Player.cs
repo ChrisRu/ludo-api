@@ -9,7 +9,7 @@ namespace LudoApi.Models
             ConnectionId = connectionId;
             Color = color;
         }
-        
+
         public bool IsReady { get; set; }
 
         public string ConnectionId { get; }
@@ -18,8 +18,6 @@ namespace LudoApi.Models
 
         public int PreviousDieRoll { get; set; } = -1;
 
-        public IEnumerable<int> Pieces { get; set; } = new[] {-1, -1, -1, -1};
-
-        public bool IsAdmin { get; set; }
+        public IEnumerable<int> Pieces { get; set; } = new[] { -1, -1, -1, -1 };
     }
 }

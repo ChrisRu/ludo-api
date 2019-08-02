@@ -76,9 +76,9 @@ namespace LudoApi.Services
             return _players.ElementAt(_playerTurn);
         }
 
-        public IPlayer GetPlayer(string connectionId)
+        public IPlayer? GetPlayer(string connectionId)
         {
-            return _players.First(player => player.ConnectionId == connectionId);
+            return _players.FirstOrDefault(player => player.ConnectionId == connectionId);
         }
 
         public Turn GetTurn(IPlayer player)

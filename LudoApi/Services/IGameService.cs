@@ -11,7 +11,7 @@ namespace LudoApi.Services
 
         IPlayer NextTurn();
 
-        IPlayer GetPlayer(string connectionId);
+        IPlayer? GetPlayer(string connectionId);
 
         Turn GetTurn(IPlayer player);
 

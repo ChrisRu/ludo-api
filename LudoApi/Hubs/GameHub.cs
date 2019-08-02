@@ -18,8 +18,6 @@ namespace LudoApi.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            await LeaveLobby();
-
             await base.OnDisconnectedAsync(exception);
         }
 
@@ -36,14 +34,11 @@ namespace LudoApi.Hubs
 
             if (_lobbyService.GetLobby(lobbyName) != null)
             {
-                throw new HubException($"Lobby with the name '${lobbyName}' already exists");
+                throw new HubException($"Lobby with the name '{lobbyName}' already exists");
             }
 
-            var lobby = _lobbyService.CreateLobby(lobbyName);
+            _lobbyService.CreateLobby(lobbyName, Context.ConnectionId);
             await JoinLobby(lobbyName);
-
-            var player = lobby.Game.GetPlayer(Context.ConnectionId);
-            player.IsAdmin = true;
         }
 
         [HubMethodName("lobby:ready")]
@@ -73,7 +68,7 @@ namespace LudoApi.Hubs
             var lobby = _lobbyService.GetLobby(lobbyName);
             if (lobby == null)
             {
-                throw new HubException($"Lobby '${lobbyName}' does not exist");
+                throw new HubException($"Lobby '{lobbyName}' does not exist");
             }
 
             var playerCount = lobby.Players.Count();
@@ -94,7 +89,7 @@ namespace LudoApi.Hubs
             var lobby = _lobbyService.GetJoinedLobby(Context.ConnectionId);
             if (lobby == null)
             {
-                return;
+                throw new HubException("Player is not in a lobby");
             }
 
             lobby.RemovePlayer(Context.ConnectionId);
@@ -111,11 +106,9 @@ namespace LudoApi.Hubs
         [HubMethodName("lobby:get-lobbies")]
         public async Task GetLobbies()
         {
-            var lobbies = _lobbyService.GetLobbies().Select(e => e.Name);
+            var lobbies = _lobbyService.GetLobbies().Select(e => e.Name).ToArray();
 
-            await Clients
-                .User(Context.ConnectionId)
-                .SendAsync("lobby:lobbies", lobbies);
+            await Clients.Caller.SendAsync("lobby:lobbies", lobbies);
         }
 
         [HubMethodName("lobby:get-players")]
@@ -127,7 +120,7 @@ namespace LudoApi.Hubs
                 throw new HubException($"Lobby '{lobbyName}' does not exist");
             }
 
-            await Clients.User(Context.ConnectionId).SendAsync("lobby:players", lobby.Players);
+            await Clients.Caller.SendAsync("lobby:players", lobby.Players);
         }
 
         #endregion
@@ -143,8 +136,7 @@ namespace LudoApi.Hubs
                 throw new HubException("You're not in a lobby");
             }
 
-            var player = lobby.Game.GetPlayer(Context.ConnectionId);
-            if (player == null || !player.IsAdmin)
+            if (Context.ConnectionId == lobby.Admin)
             {
                 throw new HubException("Only an admin can start the game");
             }
@@ -169,6 +161,11 @@ namespace LudoApi.Hubs
             }
 
             var player = lobby.Game.GetPlayer(Context.ConnectionId);
+            if (player == null)
+            {
+                throw new HubException("Player is not in lobby");
+            }
+
             if (lobby.Game.GetTurn(player) != Turn.Roll)
             {
                 throw new HubException("Not your turn");
@@ -191,6 +188,11 @@ namespace LudoApi.Hubs
 
             var game = lobby.Game;
             var player = game.GetPlayer(Context.ConnectionId);
+            if (player == null)
+            {
+                throw new HubException("Player is not in lobby");
+            }
+
             if (game.GetTurn(player) != Turn.Advance)
             {
                 throw new HubException("Not your turn to advance your piece");

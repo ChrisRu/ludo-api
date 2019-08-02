@@ -11,7 +11,7 @@ namespace LudoApiTest
         [Fact]
         public void TestCreateLobby()
         {
-            var lobby = new Lobby(0, "lobby-1", null);
+            var lobby = new Lobby(0, "lobby-1", null, null);
 
             Assert.NotNull(lobby);
             Assert.Equal("lobby-1", lobby.Name);
@@ -22,7 +22,7 @@ namespace LudoApiTest
         [Fact]
         public void TestJoinLobby()
         {
-            var lobby = new Lobby(0, "lobby-1", new GameService());
+            var lobby = new Lobby(0, "lobby-1", null, new GameService());
             lobby.AddPlayer("connection-id-1", Color.Red);
             lobby.AddPlayer("connection-id-2", Color.Blue);
 
@@ -34,7 +34,7 @@ namespace LudoApiTest
         [Fact]
         public void TestLeaveLobby()
         {
-            var lobby = new Lobby(0, "lobby-1", new GameService());
+            var lobby = new Lobby(0, "lobby-1", null, new GameService());
             lobby.AddPlayer("connection-id-1", Color.Red);
             lobby.RemovePlayer("connection-id-1");
 
@@ -44,7 +44,7 @@ namespace LudoApiTest
         [Fact]
         public void TestLeaveLobbyNonExistent()
         {
-            var lobby = new Lobby(0, "lobby-1", new GameService());
+            var lobby = new Lobby(0, "lobby-1", null, new GameService());
             lobby.AddPlayer("connection-id-1", Color.Red);
             lobby.RemovePlayer("connection-id-2");
 

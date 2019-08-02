@@ -9,6 +9,8 @@ namespace LudoApi.Models
 
         string Name { get; }
 
+        string Admin { get; }
+
         IGameService Game { get; }
 
         IEnumerable<IPlayer> Players { get; }

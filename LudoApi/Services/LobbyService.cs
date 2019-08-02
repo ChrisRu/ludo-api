@@ -23,9 +23,9 @@ namespace LudoApi.Services
             return Lobbies.FirstOrDefault(lobby => lobby.Name == lobbyName);
         }
 
-        public ILobby CreateLobby(string lobbyName)
+        public ILobby CreateLobby(string lobbyName, string connectionId)
         {
-            var lobby = new Lobby(Lobbies.Count, lobbyName, new GameService());
+            var lobby = new Lobby(Lobbies.Count, lobbyName, connectionId, new GameService());
             Lobbies.Add(lobby);
             return lobby;
         }
