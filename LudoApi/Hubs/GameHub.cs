@@ -51,6 +51,10 @@ namespace LudoApi.Hubs
             }
 
             var player = lobby.Game.GetPlayer(Context.ConnectionId);
+            if (player == null)
+            {
+                throw new HubException("Player is not in lobby");
+            }
             player.IsReady = ready;
 
             await Clients.Group($"lobby-{lobby.Id}").SendAsync("lobby:player-ready", Context.ConnectionId);
@@ -94,8 +98,8 @@ namespace LudoApi.Hubs
 
             lobby.RemovePlayer(Context.ConnectionId);
 
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"lobby-{lobby.Id}");
             await Clients.Group($"lobby-{lobby.Id}").SendAsync("lobby:player-leave", Context.ConnectionId);
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"lobby-{lobby.Id}");
 
             if (!lobby.Players.Any())
             {
@@ -120,7 +124,9 @@ namespace LudoApi.Hubs
                 throw new HubException($"Lobby '{lobbyName}' does not exist");
             }
 
-            await Clients.Caller.SendAsync("lobby:players", lobby.Players);
+            var players = lobby.Players.ToArray();
+
+            await Clients.Caller.SendAsync("lobby:players", players);
         }
 
         #endregion

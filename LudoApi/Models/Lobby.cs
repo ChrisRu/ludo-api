@@ -12,7 +12,6 @@ namespace LudoApi.Models
             Admin = admin;
             Name = name;
             Game = gameService;
-            Players = new List<IPlayer>();
         }
 
         public int Id { get; }
@@ -23,7 +22,7 @@ namespace LudoApi.Models
 
         public IGameService Game { get; }
 
-        public IEnumerable<IPlayer> Players { get; private set; }
+        public IEnumerable<IPlayer> Players { get; private set; } = new List<IPlayer>();
 
         public void AddPlayer(string connectionId, Color color)
         {
