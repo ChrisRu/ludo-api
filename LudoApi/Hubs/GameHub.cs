@@ -99,7 +99,7 @@ namespace LudoApi.Hubs
 
             if (!lobby.Players.Any())
             {
-                _lobbyService.DestroyLobby($"lobby-{lobby.Id}");
+                _lobbyService.DestroyLobby(lobby.Id);
             }
         }
 

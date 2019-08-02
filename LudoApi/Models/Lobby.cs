@@ -27,12 +27,12 @@ namespace LudoApi.Models
 
         public void AddPlayer(string connectionId, Color color)
         {
-            Players = Players.Append(new Player(connectionId, color));
+            Players = Players.Append(new Player(connectionId, color)).ToList();
         }
 
         public void RemovePlayer(string connectionId)
         {
-            Players = Players.Where(player => player.ConnectionId != connectionId);
+            Players = Players.Where(player => player.ConnectionId != connectionId).ToList();
         }
     }
 }

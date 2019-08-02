@@ -13,6 +13,6 @@ namespace LudoApi.Services
 
         ILobby CreateLobby(string lobbyName, string connectionId);
 
-        void DestroyLobby(string lobbyName);
+        void DestroyLobby(int id);
     }
 }

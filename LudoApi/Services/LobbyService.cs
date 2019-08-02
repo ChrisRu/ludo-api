@@ -6,7 +6,7 @@ namespace LudoApi.Services
 {
     public class LobbyService : ILobbyService
     {
-        private List<ILobby> Lobbies { get; } = new List<ILobby>();
+        private List<ILobby> Lobbies { get; set; } = new List<ILobby>();
 
         public IEnumerable<ILobby> GetLobbies()
         {
@@ -30,13 +30,9 @@ namespace LudoApi.Services
             return lobby;
         }
 
-        public void DestroyLobby(string lobbyName)
+        public void DestroyLobby(int id)
         {
-            var lobby = GetLobby(lobbyName);
-            if (lobby != null)
-            {
-                Lobbies.Remove(lobby);
-            }
+            Lobbies = Lobbies.Where(lobby => lobby.Id != id).ToList();
         }
     }
 }
