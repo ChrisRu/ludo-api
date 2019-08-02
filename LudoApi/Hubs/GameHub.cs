@@ -18,6 +18,8 @@ namespace LudoApi.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
+            await LeaveLobby();
+
             await base.OnDisconnectedAsync(exception);
         }
 
