@@ -117,6 +117,14 @@ namespace LudoApi.Hubs
             await Clients.Caller.SendAsync("lobby:lobbies", lobbies);
         }
 
+        [HubMethodName("lobby:exists")]
+        public async Task LobbyExists(string lobbyName)
+        {
+            var lobby = _lobbyService.GetLobby(lobbyName);
+
+            await Clients.Caller.SendAsync("lobby:status", lobby != null);
+        }
+
         [HubMethodName("lobby:get-players")]
         public async Task GetPlayers(string lobbyName)
         {

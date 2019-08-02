@@ -26,6 +26,7 @@ Connect on subpath `/game`
 - invoke `lobby:ready` to inform your mates you're ready to roll
 - invoke `lobby:get-players` with `lobbyName` to get an event back called `lobby:players` with the players in said lobby
 - invoke `lobby:get-lobbies` to get an event back called `lobby:lobbies` with the lobbies names
+- invoke `lobby:exists` with `lobbyName` to get an event back called `lobby:status` with a boolean referring to said lobby's existence
 
 When you're in a lobby you can get events for said lobby
 
